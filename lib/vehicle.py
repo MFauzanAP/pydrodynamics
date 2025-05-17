@@ -42,11 +42,4 @@ class Vehicle:
 		# Calculate the next state using the dynamics model
 		self.state = next_state if next_state else self.dynamics.calculate(dt, self.state, tau)
 		print(self.state)
-
-if __name__ == "__main__":
-	auv = Vehicle("examples/bpv2.yml")
-	auv.step(1, [1100, 1100, 1100, 1100, 1900, 1100, 1100, 1100])
-	auv.step(1, [1100, 1100, 1100, 1100, 1900, 1100, 1100, 1100])
-	auv.step(1, [1100, 1100, 1100, 1100, 1900, 1100, 1100, 1100])
-	auv.step(1, [1100, 1100, 1100, 1100, 1900, 1100, 1100, 1100])
-	auv.step(1, [1100, 1100, 1100, 1100, 1900, 1100, 1100, 1100])
+		return self.state
