@@ -1,8 +1,11 @@
 import yaml
 
-from utils import EnvironmentParams, PhysicalParams, ElectricalParams, ThrusterData, ThrusterParams, Position
+from lib.utils import EnvironmentParams, PhysicalParams, ElectricalParams, ThrusterData, ThrusterParams, Position
 
 class ParamsManager:
+    """
+        Class to manage and load vehicle parameters from a YAML file.
+    """
     def __init__(self, path):
         self.key_map = {
             'gravity': 'env.gravity',

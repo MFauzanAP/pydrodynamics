@@ -1,9 +1,14 @@
 import numpy as np
 
-from params import ParamsManager
+from lib.params import ParamsManager
 from scipy.interpolate import RegularGridInterpolator
 
-class ThrusterDynamics:
+class Thrusters:
+    """
+        Find thruster forces and moments based on PWM values.
+        Uses thruster data from the given CSV file and interpolates with the current voltage.
+        Also takes into account the thruster positions and directions used in the vehicle model.
+    """
     def __init__(self, params: ParamsManager):
         self.params = params
 
@@ -39,7 +44,7 @@ class ThrusterDynamics:
             Input:
                 pwm_array: Array of PWM values for the thrusters.
             Output:
-                tau_t: External force and moment due to thrusters in body fixed frame.
+                tau_t: External force and moment due to thrusters in body fixed frame, in (6,) format.
         """
         # Convert PWM values to thrust forces
         thrust_forces = self.pwm_to_force(pwm_array) * self.thruster_directions
@@ -48,9 +53,9 @@ class ThrusterDynamics:
         thrust_moments = np.cross(self.thruster_positions, thrust_forces)
 
         # Combine thrust forces and moments into a single vector
-        tau_t = np.zeros((6, 1))
-        tau_t[0:3] = np.sum(thrust_forces, axis=0).reshape((3, 1))
-        tau_t[3:6] = np.sum(thrust_moments, axis=0).reshape((3, 1))
+        tau_t = np.zeros((6,))
+        tau_t[0:3] = np.sum(thrust_forces, axis=0).reshape((3,))
+        tau_t[3:6] = np.sum(thrust_moments, axis=0).reshape((3,))
 
         return tau_t
 

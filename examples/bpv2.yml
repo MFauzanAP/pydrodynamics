@@ -8,11 +8,11 @@ env:
 physical:
   mass: 23.8
   volume: 0.0275
-  
+
   com:
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 0.0395
+    y: 0.0151
+    z: -0.0092
   cob:
     x: 0.0
     y: 0.0

@@ -1,12 +1,14 @@
-import math
 import numpy as np
 
-from params import ParamsManager
-from utils import State, Position, Orientation, LinearVelocity, AngularVelocity, body_to_world, fix_angular_circularity
+from lib.params import ParamsManager
+from lib.utils import body_to_world, fix_angular_circularity, state_array_to_object, state_object_to_array
 
 class Dynamics:
+	"""
+		Given the external forces and moments acting on the vehicle, this class calculates the next state of the vehicle.
+		Uses Runge-Kutta method to integrate the equations of motion, obtaining position and velocity.
+	"""
 	def __init__(self, params: ParamsManager):
-		"""Initialize the dynamics model with parameters and initial state."""
 		self.params = params
 		self.num_states = 13
 
@@ -42,33 +44,15 @@ class Dynamics:
 		"""Calculate the next state of the vehicle based on external forces."""
 		if self.params.verbose: print(tau)
 
-		# Unpack state
-		x, y, z = state.position.x, state.position.y, state.position.z
-		roll, pitch, yaw = state.orientation.roll, state.orientation.pitch, state.orientation.yaw
-		u, v, w = state.linear_velocity.u, state.linear_velocity.v, state.linear_velocity.w
-		p, q, r = state.angular_velocity.p, state.angular_velocity.q, state.angular_velocity.r
-
 		# Create a new state in np array format
-		state = np.array([
-			x, y, z,
-			roll, pitch, yaw,
-			u, v, w,
-			p, q, r,
-			state.voltage
-		])
+		state = state_object_to_array(state)
 
 		# Calculate the next state using Runge-Kutta method
 		next_state = self.runge_kutta(dt, state, tau)
 		if self.params.verbose: print(next_state)
 
 		# Convert the next state back to State object
-		return State(
-			position=Position(next_state[0], next_state[1], next_state[2]),
-			orientation=Orientation(next_state[3], next_state[4], next_state[5]),
-			linear_velocity=LinearVelocity(next_state[6], next_state[7], next_state[8]),
-			angular_velocity=AngularVelocity(next_state[9], next_state[10], next_state[11]),
-			voltage=next_state[12],
-		)
+		return state_array_to_object(next_state)
 
 	def runge_kutta(self, dt, state, tau):
 		"""
@@ -102,10 +86,17 @@ class Dynamics:
 			Output:
 				delta_state: The change in state of the vehicle after applying the thruster forces, in np array format, denoting acceleration and new velocities.
 		"""
+		# Unpack state
+		u, v, w, p, q, r = state[6:12]
+
 		# Solve for accelerations
 		accels = np.matmul(self.inv_mass_matrix, tau).reshape((6,))
 
 		# Convert body-fixed velocities to world frame to match world fixed frame for position and orientation when integrating
-		vels = body_to_world(state)
+		r_trans, r_rot = body_to_world(state)
+		vels = np.concatenate((
+			np.matmul(r_trans, np.array([u, v, w])),
+			np.matmul(r_rot, np.array([p, q, r]))
+		), axis=0).reshape((6,))
 
 		return np.concatenate((vels, accels, [0]), axis=0).reshape((self.num_states,))
