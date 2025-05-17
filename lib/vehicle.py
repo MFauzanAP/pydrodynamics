@@ -9,7 +9,7 @@ class Vehicle:
 		Main class tying all the different modules together.
 		It initializes the vehicle from the given yaml file and calculates the next state of the vehicle given PWM control signals.
 	"""
-	def __init__(self, params, initial_state=None):
+	def __init__(self, params, initial_state: State = None):
 		self.params = ParamsManager(params)
 		self.dynamics = Dynamics(self.params)
 		self.thrusters = Thrusters(self.params)
@@ -35,7 +35,7 @@ class Vehicle:
 				next_state: The next state of the vehicle after applying the thruster forces.
 		"""
 		# Calculate total external forces and moments
-		tau_thrusters = self.thrusters.calculate(pwm_array)
+		tau_thrusters = self.thrusters.calculate(self.state, pwm_array)
 		tau_env = self.env.calculate(self.state)
 		tau = tau_thrusters + tau_env
 

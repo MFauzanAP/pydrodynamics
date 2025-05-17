@@ -28,6 +28,24 @@ class AngularVelocity:
     r: float # deg/s
 
 @dataclass
+class Velocity:
+    u: float # m/s
+    v: float # m/s
+    w: float # m/s
+    p: float # deg/s
+    q: float # deg/s
+    r: float # deg/s
+
+@dataclass
+class ForceCoefficients:
+    x: Velocity
+    y: Velocity
+    z: Velocity
+    k: Velocity
+    m: Velocity
+    n: Velocity
+
+@dataclass
 class State:
     position: Position
     orientation: Orientation
@@ -49,6 +67,10 @@ class PhysicalParams:
     cob : Position # Center of buoyancy
 
     inertia: Position # Inertia tensor (Ixx, Iyy, Izz)
+    projected_area: Position # Projected area in all 3 axes (m^2, m^2, m^2)
+
+    drag: ForceCoefficients # Drag coefficients in all 6 degrees of freedom, subjected to const. velocities in each direction (36 values total)
+    added_mass: ForceCoefficients # Added mass coefficients in all 6 degrees of freedom, subjected to const. acceleration in each direction (36 values total)
 
 @dataclass
 class ElectricalParams:
@@ -228,5 +250,6 @@ def unpack_state_object(state: State) -> tuple:
         state.linear_velocity.w,
         state.angular_velocity.p,
         state.angular_velocity.q,
-        state.angular_velocity.r
+        state.angular_velocity.r,
+        state.voltage
     )

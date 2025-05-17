@@ -14,6 +14,52 @@ class Environment:
 	def __init__(self, params):
 		self.params = params
 
+		# Construct drag matrix
+		drag_xu = params.get('drag_xu')
+		drag_xv = params.get('drag_xv')
+		drag_xw = params.get('drag_xw')
+		drag_xp = params.get('drag_xp')
+		drag_xq = params.get('drag_xq')
+		drag_xr = params.get('drag_xr')
+		drag_yu = params.get('drag_yu')
+		drag_yv = params.get('drag_yv')
+		drag_yw = params.get('drag_yw')
+		drag_yp = params.get('drag_yp')
+		drag_yq = params.get('drag_yq')
+		drag_yr = params.get('drag_yr')
+		drag_zu = params.get('drag_zu')
+		drag_zv = params.get('drag_zv')
+		drag_zw = params.get('drag_zw')
+		drag_zp = params.get('drag_zp')
+		drag_zq = params.get('drag_zq')
+		drag_zr = params.get('drag_zr')
+		drag_ku = params.get('drag_ku')
+		drag_kv = params.get('drag_kv')
+		drag_kw = params.get('drag_kw')
+		drag_kp = params.get('drag_kp')
+		drag_kq = params.get('drag_kq')
+		drag_kr = params.get('drag_kr')
+		drag_mu = params.get('drag_mu')
+		drag_mv = params.get('drag_mv')
+		drag_mw = params.get('drag_mw')
+		drag_mp = params.get('drag_mp')
+		drag_mq = params.get('drag_mq')
+		drag_mr = params.get('drag_mr')
+		drag_nu = params.get('drag_nu')
+		drag_nv = params.get('drag_nv')
+		drag_nw = params.get('drag_nw')
+		drag_np = params.get('drag_np')
+		drag_nq = params.get('drag_nq')
+		drag_nr = params.get('drag_nr')
+		self.drag_matrix = np.array([
+			[drag_xu, drag_xv, drag_xw, drag_xp, drag_xq, drag_xr],
+			[drag_yu, drag_yv, drag_yw, drag_yp, drag_yq, drag_yr],
+			[drag_zu, drag_zv, drag_zw, drag_zp, drag_zq, drag_zr],
+			[drag_ku, drag_kv, drag_kw, drag_kp, drag_kq, drag_kr],
+			[drag_mu, drag_mv, drag_mw, drag_mp, drag_mq, drag_mr],
+			[drag_nu, drag_nv, drag_nw, drag_np, drag_nq, drag_nr]
+		]) * -0.5 * params.get('density') * params.get('apx')
+
 	def calculate(self, state):
 		"""
 			Calculate the external forces and moments acting on the vehicle, all in body-fixed frame:
@@ -31,7 +77,7 @@ class Environment:
 		state = state_object_to_array(state)
 
 		tau_hydrostatic = self.calculate_hydrostatic(state)
-		tau_drag = 0 # self.calculate_drag(state)
+		tau_drag = self.calculate_drag(state)
 		tau_lift = 0 # self.calculate_lift(state)
 		tau_added_mass = 0 # self.calculate_added_mass(state)
 
@@ -42,6 +88,7 @@ class Environment:
 		"""
 			Calculate the hydrostatic forces and moments acting on the vehicle.
 			Includes buoyancy and gravity.
+
 			Input:
 				state: The current state of the vehicle.
 			Output:
@@ -64,3 +111,16 @@ class Environment:
 
 		# Merge forces and moments into a single vector
 		return np.concatenate((hydrostatic_forces, hydrostatic_moments), axis=0).reshape((6,))
+	
+	def calculate_drag(self, state):
+		"""
+			Calculate the drag forces and moments acting on the vehicle.
+
+			Input:
+				state: The current state of the vehicle.
+			Output:
+				tau_drag: Drag forces and moments in body-fixed frame.
+		"""
+		vels = state[6:12].reshape((6,))
+		vels *= np.abs(vels)
+		return np.matmul(self.drag_matrix, vels).reshape((6,))
