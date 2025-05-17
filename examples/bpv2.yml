@@ -1,0 +1,104 @@
+name: 'BlackPearl v2'
+verbose: true
+
+env:
+  gravity: 9.81
+  density: 1000
+
+physical:
+  mass: 23.8
+  volume: 0.0275
+  
+  com:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  cob:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+
+  inertia:
+    x: 1.120
+    y: 0.729
+    z: 0.176
+
+electrical:
+  voltage: 16.8
+  capacity: 8000
+
+thrusters:
+  data: 't200_data.csv'
+  list:
+    - name: blh
+      pos:
+        x: -0.36
+        y: -0.25
+        z: 0
+      dir:
+        x: 1
+        y: -1
+        z: 0
+    - name: frv
+      pos:
+        x: 0.218
+        y: 0.236
+        z: 0
+      dir:
+        x: 0
+        y: 0
+        z: 1
+    - name: flv
+      pos:
+        x: 0.218
+        y: -0.236
+        z: 0
+      dir:
+        x: 0
+        y: 0
+        z: 1
+    - name: frh
+      pos:
+        x: 0.36
+        y: 0.25
+        z: 0
+      dir:
+        x: 1
+        y: -1
+        z: 0
+    - name: flh
+      pos:
+        x: 0.36
+        y: -0.25
+        z: 0
+      dir:
+        x: 1
+        y: 1
+        z: 0
+    - name: brv
+      pos:
+        x: -0.218
+        y: 0.236
+        z: 0
+      dir:
+        x: 0
+        y: 0
+        z: 1
+    - name: blv
+      pos:
+        x: -0.218
+        y: -0.236
+        z: 0
+      dir:
+        x: 0
+        y: 0
+        z: 1
+    - name: brh
+      pos:
+        x: -0.36
+        y: 0.25
+        z: 0
+      dir:
+        x: 1
+        y: 1
+        z: 0
