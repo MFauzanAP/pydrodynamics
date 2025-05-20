@@ -1,8 +1,8 @@
-from lib.utils import State, Position, Orientation, LinearVelocity, AngularVelocity
-from lib.dynamics import Dynamics
-from lib.params import ParamsManager
-from lib.thrusters import Thrusters
-from lib.environment import Environment
+from pydrodynamics.utils import State, Position, Orientation, LinearVelocity, AngularVelocity
+from pydrodynamics.dynamics import Dynamics
+from pydrodynamics.params import ParamsManager
+from pydrodynamics.thrusters import Thrusters
+from pydrodynamics.environment import Environment
 
 class Vehicle:
 	"""

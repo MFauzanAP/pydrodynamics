@@ -1,6 +1,6 @@
 import yaml
 
-from lib.utils import EnvironmentParams, ForceCoefficients, PhysicalParams, ElectricalParams, ThrusterData, ThrusterParams, Position, Velocity
+from pydrodynamics.utils import EnvironmentParams, ForceCoefficients, PhysicalParams, ElectricalParams, ThrusterData, ThrusterParams, Position, Velocity
 
 class ParamsManager:
     """

@@ -1,7 +1,7 @@
 import numpy as np
 
-from lib.params import ParamsManager
-from lib.utils import unpack_state_object
+from pydrodynamics.params import ParamsManager
+from pydrodynamics.utils import unpack_state_object
 from scipy.interpolate import RegularGridInterpolator
 
 class Thrusters:

@@ -1,6 +1,6 @@
 import numpy as np
 
-from lib.utils import state_object_to_array, world_to_body
+from pydrodynamics.utils import state_object_to_array, world_to_body
 
 class Environment:
 	"""
@@ -15,6 +15,14 @@ class Environment:
 		self.params = params
 
 		# Construct drag matrix
+		projected_area_vector = np.array([
+			params.get('apx'),
+			params.get('apy'),
+			params.get('apz'),
+			params.get('apz'),
+			params.get('apz'),
+			params.get('apy'),
+		]).T
 		drag_xu = params.get('drag_xu')
 		drag_xv = params.get('drag_xv')
 		drag_xw = params.get('drag_xw')
@@ -58,7 +66,7 @@ class Environment:
 			[drag_ku, drag_kv, drag_kw, drag_kp, drag_kq, drag_kr],
 			[drag_mu, drag_mv, drag_mw, drag_mp, drag_mq, drag_mr],
 			[drag_nu, drag_nv, drag_nw, drag_np, drag_nq, drag_nr]
-		]) * -0.5 * params.get('density') * params.get('apx')
+		]) * -0.5 * params.get('density') * projected_area_vector
 
 	def calculate(self, state):
 		"""
@@ -121,6 +129,10 @@ class Environment:
 			Output:
 				tau_drag: Drag forces and moments in body-fixed frame.
 		"""
+		# Extract velocities and convert angular velocities to radians
 		vels = state[6:12].reshape((6,))
+		vels[3:6] = np.radians(vels[3:6])
 		vels *= np.abs(vels)
+
+		# Calculate drag forces and moments
 		return np.matmul(self.drag_matrix, vels).reshape((6,))

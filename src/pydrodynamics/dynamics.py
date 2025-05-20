@@ -1,7 +1,7 @@
 import numpy as np
 
-from lib.params import ParamsManager
-from lib.utils import body_to_world, fix_angular_circularity, state_array_to_object, state_object_to_array
+from pydrodynamics.params import ParamsManager
+from pydrodynamics.utils import body_to_world, fix_angular_circularity, state_array_to_object, state_object_to_array
 
 class Dynamics:
     """
