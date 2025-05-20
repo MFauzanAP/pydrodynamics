@@ -6,7 +6,7 @@ class ParamsManager:
     """
         Class to manage and load vehicle parameters from a YAML file.
     """
-    def __init__(self, path):
+    def __init__(self, path: str):
         self.key_map = {
             'gravity': 'env.gravity',
             'density': 'env.density',
@@ -118,7 +118,7 @@ class ParamsManager:
             'capacity': 'electrical.capacity',
         }
 
-        self.params_folder = "/".join(path.split('/')[:-1]) + '/'
+        self.params_folder = "/".join(path.split('/')[:-1]) + '/' if path.find('/') != -1 else ""
         self.load(path)
 
     def load(self, path):
