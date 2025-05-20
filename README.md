@@ -166,6 +166,34 @@ To build the package for local development, you can use the following command:
 python -m pip install -e .
 ```
 
+Once you're happy with the changes, commit them and bump the version number:
+
+```bash
+git ...
+
+# Update the patch number
+bumpver update --patch
+
+# Or update the minor number
+bumpver update --minor
+
+# Or update the major number
+bumpver update --major
+```
+
+Then build the package using:
+
+```bash
+python -m build
+twine check dist/*
+```
+
+Then, upload the package to PyPI using:
+
+```bash
+twine upload dist/*
+```
+
 ## Future Work
 - Implement added mass and coriolis forces
 - Simulate draining battery and voltage drop
